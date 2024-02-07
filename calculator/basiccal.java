@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 interface CalculatorOperation {
-    void displayMenu();
+	void displayMenu();
     double performOperation();
 
     double add(ArrayList<Double> numbers);
@@ -17,7 +17,7 @@ interface CalculatorOperation {
 
     double square(double a);
 
-    double squareRoot(double a);  // Changed method name from 'cube' to 'squareRoot'
+    double squareRoot(double a);
 
     ArrayList<Double> getInputNumbers();
 
@@ -25,8 +25,8 @@ interface CalculatorOperation {
 }
 
 abstract class basiccal implements CalculatorOperation {
-    private Scanner scanner = new Scanner(System.in);
-
+    protected Scanner scanner = new Scanner(System.in);
+    
     public void displayMenu() {
         System.out.println("\nMenu:");
         System.out.println("1. Addition");
@@ -34,62 +34,61 @@ abstract class basiccal implements CalculatorOperation {
         System.out.println("3. Multiplication");
         System.out.println("4. Division");
         System.out.println("5. Square");
-        System.out.println("6. Square Root"); 
+        System.out.println("6. Square Root");
     }
+    
+    
 
     public double performOperation() {
         double result = 0;
 
         try {
-            while (true) {
+            int choice;
+            do {
+                displayMenu();
+                System.out.println("Enter your choice:");
+                choice = scanner.nextInt();
+                scanner.nextLine(); 
 
-                ArrayList<Double> numbers = getInputNumbers();
-
-                int choice;
-                do {
-                    System.out.println("Enter your choice:");
-                    choice = scanner.nextInt();
-                    if (choice < 1 || choice > 6) {
-                        System.out.println("Invalid choice. Please enter a valid option (1-6).");
-                    }
-                } while (choice < 1 || choice > 6);
-
-                switch (choice) {
-                    case 1:
-                        result = add(numbers);
-                        break;
-                    case 2:
-                        result = subtract(numbers);
-                        break;
-                    case 3:
-                        result = multiply(numbers);
-                        break;
-                    case 4:
-                        result = divide(numbers);
-                        break;
-                    case 5:
-                        System.out.println("Enter number:");
-                        double squareNumber = scanner.nextDouble();
-                        result = square(squareNumber);
-                        break;
-                    case 6:
-                        System.out.println("Enter number:");
-                        double squareRootNumber = scanner.nextDouble();
-                        result = squareRoot(squareRootNumber); 
-                        break;
-                    default:
-                        System.out.println("Invalid choice");
-                        break;
+                if (choice < 1 || choice > 6) {
+                    System.out.println("Invalid choice. Please enter a valid option (1-6).");
                 }
+            } while (choice < 1 || choice > 6);
 
-                System.out.println("Result: " + result);
+            ArrayList<Double> numbers = getInputNumbers();
 
-                System.out.println("Do you want to perform another operation? (y/n)");
-                char continueChoice = scanner.next().charAt(0);
-
-                if (continueChoice == 'n') {
+            switch (choice) {
+                case 1:
+                    result = add(numbers);
                     break;
-                }
+                case 2:
+                    result = subtract(numbers);
+                    break;
+                case 3:
+                    result = multiply(numbers);
+                    break;
+                case 4:
+                    result = divide(numbers);
+                    break;
+                case 5:
+                    System.out.println("Enter number:");
+                    double squareNumber = scanner.nextDouble();
+                    result = square(squareNumber);
+                    break;
+                case 6:
+                    System.out.println("Enter number:");
+                    double squareRootNumber = scanner.nextDouble();
+                    result = squareRoot(squareRootNumber);
+                    break;
+            }
+
+            System.out.println("Result: " + result);
+
+            System.out.println("Do you want to perform another operation? (y/n)");
+            char continueChoice = scanner.next().charAt(0);
+
+            if (continueChoice == 'y') {
+                performOperation();
             }
 
         } catch (Exception e) {
@@ -137,32 +136,43 @@ abstract class basiccal implements CalculatorOperation {
     public double squareRoot(double a) {
         return Math.sqrt(a);  
     }
+    
+    
+    
+    
+    
 
     public ArrayList<Double> getInputNumbers() {
         ArrayList<Double> numbers = new ArrayList<>();
 
-        displayMenu();
-
         System.out.println("Enter numbers separated by spaces (terminate with 'n'):");
 
-        while (scanner.hasNext()) {
-            try {
-                String input = scanner.next();
-                if (input.equals("n")) {
+        try {
+            String input = scanner.nextLine();
+            String[] tokens = input.split("\\s+");
+
+            for (String token : tokens) {
+                if (token.equalsIgnoreCase("n")) {
                     break;
                 }
-                double number = Double.parseDouble(input);
-                numbers.add(number);
 
-            } catch (Exception e) {
-                System.out.println("Invalid input. Please enter a valid number or 'n' to stop inputting numbers.");
-                scanner.nextLine();
+                try {
+                    double number = Double.parseDouble(token);
+                    numbers.add(number);
+                } catch (Exception e) {
+                    System.out.println("Invalid number format: " + token);
+                    return getInputNumbers();
+                }
             }
+        } catch (Exception e) {
+            System.out.println("Invalid input. Please enter valid numbers or 'n' to stop inputting numbers.");
+            return getInputNumbers();
         }
 
         return numbers;
     }
 
-    
+
     }
-}
+
+
