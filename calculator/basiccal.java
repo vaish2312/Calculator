@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 interface CalculatorOperation {
-	void displayMenu();
+    void displayMenu();
     double performOperation();
 
-    double add( ArrayList<Double> numbers);
+    double add(ArrayList<Double> numbers);
 
-    double subtract( ArrayList<Double> numbers);
+    double subtract(ArrayList<Double> numbers);
 
-    double multiply( ArrayList<Double> numbers);
+    double multiply(ArrayList<Double> numbers);
 
-    double divide( ArrayList<Double> numbers) throws ArithmeticException;
+    double divide(ArrayList<Double> numbers) throws ArithmeticException;
 
     double square(double a);
 
-    double cube(double a);
+    double squareRoot(double a);  // Changed method name from 'cube' to 'squareRoot'
 
     ArrayList<Double> getInputNumbers();
 
@@ -25,146 +25,145 @@ interface CalculatorOperation {
 }
 
 abstract class basiccal implements CalculatorOperation {
-	  private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner = new Scanner(System.in);
 
-	  public void displayMenu() {
-	        System.out.println("\nMenu:");
-	        System.out.println("1. Addition");
-	        System.out.println("2. Subtraction");
-	        System.out.println("3. Multiplication");
-	        System.out.println("4. Division");
-	        System.out.println("5. Square");
-	        System.out.println("6. Cube");
-	    }
-	  
-	  public double performOperation() {
-		    double result = 0;
+    public void displayMenu() {
+        System.out.println("\nMenu:");
+        System.out.println("1. Addition");
+        System.out.println("2. Subtraction");
+        System.out.println("3. Multiplication");
+        System.out.println("4. Division");
+        System.out.println("5. Square");
+        System.out.println("6. Square Root"); 
+    }
 
-		    try {
-		        while (true) {
-		            
-		            ArrayList<Double> numbers = getInputNumbers();
+    public double performOperation() {
+        double result = 0;
 
-		            int choice;
-		            do {
-		                System.out.println("Enter your choice:");
-		                choice = scanner.nextInt();
-		                if (choice < 1 || choice > 6) {
-		                    System.out.println("Invalid choice. Please enter a valid option (1-6).");
-		                }
-		            } while (choice < 1 || choice > 6);
+        try {
+            while (true) {
 
-		            switch (choice) {
-		                case 1:
-		                    result = add(numbers);
-		                    break;
-		                case 2:
-		                    result = subtract(numbers);
-		                    break;
-		                case 3:
-		                    result = multiply(numbers);
-		                    break;
-		                case 4:
-		                    result = divide(numbers);
-		                    break;
-		                case 5:
-		                    System.out.println("Enter number:");
-		                    double squareNumber = scanner.nextDouble();
-		                    result = square(squareNumber);
-		                    break;
-		                case 6:
-		                    System.out.println("Enter number:");
-		                    double cubeNumber = scanner.nextDouble();
-		                    result = cube(cubeNumber);
-		                    break;
-		                default:
-		                    System.out.println("Invalid choice");
-		                    break;
-		            }
+                ArrayList<Double> numbers = getInputNumbers();
 
-		            System.out.println("Result: " + result);
+                int choice;
+                do {
+                    System.out.println("Enter your choice:");
+                    choice = scanner.nextInt();
+                    if (choice < 1 || choice > 6) {
+                        System.out.println("Invalid choice. Please enter a valid option (1-6).");
+                    }
+                } while (choice < 1 || choice > 6);
 
-		            System.out.println("Do you want to perform another operation? (y/n)");
-		            char continueChoice = scanner.next().charAt(0);
+                switch (choice) {
+                    case 1:
+                        result = add(numbers);
+                        break;
+                    case 2:
+                        result = subtract(numbers);
+                        break;
+                    case 3:
+                        result = multiply(numbers);
+                        break;
+                    case 4:
+                        result = divide(numbers);
+                        break;
+                    case 5:
+                        System.out.println("Enter number:");
+                        double squareNumber = scanner.nextDouble();
+                        result = square(squareNumber);
+                        break;
+                    case 6:
+                        System.out.println("Enter number:");
+                        double squareRootNumber = scanner.nextDouble();
+                        result = squareRoot(squareRootNumber);  // Changed method call from 'cube' to 'squareRoot'
+                        break;
+                    default:
+                        System.out.println("Invalid choice");
+                        break;
+                }
 
-		            if (continueChoice == 'n') {
-		                break;
-		            }
-		        }
-		    
-		    } catch (Exception e) {
-		        System.out.println("Error: Invalid input. Please enter a valid number.");
-		        scanner.nextLine();
-		    }
+                System.out.println("Result: " + result);
 
-		    return result;
-		}
+                System.out.println("Do you want to perform another operation? (y/n)");
+                char continueChoice = scanner.next().charAt(0);
 
-	    
+                if (continueChoice == 'n') {
+                    break;
+                }
+            }
 
-	    
+        } catch (Exception e) {
+            System.out.println("Error: Invalid input. Please enter a valid number.");
+            scanner.nextLine();
+        }
 
-	    public double add( ArrayList<Double> numbers) {
-	        return numbers.stream().mapToDouble(Double::doubleValue)
-                    .sum();
-	    }
+        return result;
+    }
 
-	    public double subtract( ArrayList<Double> numbers) {
-	        return numbers.stream()
-	                      .mapToDouble(Double::doubleValue)
-	                      .reduce((x, y) -> x - y)
-	                      .orElse(0.0);
-	    }
+    public double add(ArrayList<Double> numbers) {
+        return numbers.stream().mapToDouble(Double::doubleValue)
+                .sum();
+    }
 
-	    public double multiply( ArrayList<Double> numbers) {
-	        return numbers.stream()
-	                      .mapToDouble(Double::doubleValue)
-	                      .reduce((x, y) -> x * y)
-	                      .orElse(1.0);
-	    }
+    public double subtract(ArrayList<Double> numbers) {
+        return numbers.stream()
+                .mapToDouble(Double::doubleValue)
+                .reduce((x, y) -> x - y)
+                .orElse(0.0);
+    }
 
-	    public double divide( ArrayList<Double> numbers) throws ArithmeticException {
-	        System.out.println("Enter divisor:");
-	        double divisor = scanner.nextDouble();
-	        if (divisor == 0) {
-	            throw new ArithmeticException("Cannot divide by zero");
-	        }
-	        return numbers.stream()
-	        		.mapToDouble(Double::doubleValue)
-	        		.reduce((a, b) -> a / b).orElse(0.0);
-	    }
+    public double multiply(ArrayList<Double> numbers) {
+        return numbers.stream()
+                .mapToDouble(Double::doubleValue)
+                .reduce((x, y) -> x * y)
+                .orElse(1.0);
+    }
 
-	    public double square(double a) {
-	        return a * a;
-	    }
+    public double divide(ArrayList<Double> numbers) throws ArithmeticException {
+        System.out.println("Enter divisor:");
+        double divisor = scanner.nextDouble();
+        if (divisor == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        return numbers.stream()
+                .mapToDouble(Double::doubleValue)
+                .reduce((a, b) -> a / b).orElse(0.0);
+    }
 
-	    public double cube(double a) {
-	        return a * a * a;
-	    }
+    public double square(double a) {
+        return a * a;
+    }
 
-	    public ArrayList<Double> getInputNumbers() {
-	    	 ArrayList<Double> numbers = new ArrayList<>();
+    public double squareRoot(double a) {
+        return Math.sqrt(a);  
+    }
 
-	        displayMenu();
+    public ArrayList<Double> getInputNumbers() {
+        ArrayList<Double> numbers = new ArrayList<>();
 
-	        System.out.println("Enter numbers separated by spaces (terminate with 'n'):");
+        displayMenu();
 
-	        while (scanner.hasNext()) {
-	            try {
-	                String input = scanner.next();
-	                if (input.equals("n")) {
-	                    break;
-	                }
-	                double number = Double.parseDouble(input);
-	                numbers.add(number);
+        System.out.println("Enter numbers separated by spaces (terminate with 'n'):");
 
-	            } catch (Exception e) {
-	                System.out.println("Invalid input. Please enter a valid number or 'n' to stop inputting numbers.");
-	                scanner.nextLine(); 
-	            }
-	        }
+        while (scanner.hasNext()) {
+            try {
+                String input = scanner.next();
+                if (input.equals("n")) {
+                    break;
+                }
+                double number = Double.parseDouble(input);
+                numbers.add(number);
 
-	        return numbers;
-	    }
-	   
-	}
+            } catch (Exception e) {
+                System.out.println("Invalid input. Please enter a valid number or 'n' to stop inputting numbers.");
+                scanner.nextLine();
+            }
+        }
+
+        return numbers;
+    }
+
+    public void closeScanner() {
+        scanner.close();
+    }
+}
