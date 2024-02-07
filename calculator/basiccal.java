@@ -163,7 +163,6 @@ abstract class basiccal implements CalculatorOperation {
         return numbers;
     }
 
-    public void closeScanner() {
-        scanner.close();
+    
     }
 }
