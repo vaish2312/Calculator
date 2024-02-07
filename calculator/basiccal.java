@@ -175,4 +175,3 @@ abstract class basiccal implements CalculatorOperation {
 
     }
 
-
