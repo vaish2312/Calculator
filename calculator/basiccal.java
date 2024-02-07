@@ -75,7 +75,7 @@ abstract class basiccal implements CalculatorOperation {
                     case 6:
                         System.out.println("Enter number:");
                         double squareRootNumber = scanner.nextDouble();
-                        result = squareRoot(squareRootNumber);  // Changed method call from 'cube' to 'squareRoot'
+                        result = squareRoot(squareRootNumber); 
                         break;
                     default:
                         System.out.println("Invalid choice");
